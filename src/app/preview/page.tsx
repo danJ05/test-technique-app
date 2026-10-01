@@ -6,7 +6,6 @@ import { List, Pencil, Plus, RefreshCw, Repeat, UserX } from "lucide-react";
 import {
   Amount,
   AppHeader,
-  AuthCard,
   BirdIllustration,
   Breadcrumb,
   ChartLegend,
@@ -20,10 +19,11 @@ import {
   MaskedValue,
   PageHeader,
   Pagination,
-  StoreCard,
   Timeline,
   type DataTableColumn,
 } from "@/shared/components";
+import { AuthCard } from "@/features/auth/components/AuthCard";
+import { StoreCard } from "@/features/stores/components/StoreCard";
 import { APP_NAV_ITEMS } from "@/shared/config/app-navigation";
 import {
   Badge,

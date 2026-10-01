@@ -19,8 +19,8 @@ export const StoreCard = ({ name, location, href, code, isHighlighted = false, c
     className={cn(
       "group flex h-[150px] min-w-0 flex-col justify-between rounded-card p-5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:h-[170px]",
       isHighlighted
-        ? "bg-linear-to-br from-primary-light to-primary text-white"
-        : "bg-white text-ink hover:bg-linear-to-br hover:from-primary-light hover:to-primary hover:text-white",
+        ? "bg-linear-to-br from-primary-bright to-primary text-white"
+        : "bg-white text-ink hover:bg-linear-to-br hover:from-primary-bright hover:to-primary hover:text-white",
       className,
     )}
   >

@@ -15,6 +15,7 @@ const longDateFormatter = new Intl.DateTimeFormat("fr-FR", {
   month: "long",
   year: "numeric",
 });
+const timeFormatter = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" });
 const monthFormatter = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" });
 
 export const startOfDay = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -56,6 +57,12 @@ export const chunkWeeks = (days: Date[]): Date[][] =>
   );
 
 export const formatDate = (date: Date): string => dateFormatter.format(date);
+
+/** Date et heure d'une chaîne ISO, ex. `20/01/2025, 10:20`. */
+export const formatDateTime = (value: string): string => {
+  const date = new Date(value);
+  return `${dateFormatter.format(date)}, ${timeFormatter.format(date)}`;
+};
 
 export const formatLongDate = (date: Date): string => longDateFormatter.format(date);
 

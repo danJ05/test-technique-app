@@ -4,31 +4,22 @@ import { useStores } from "@/features/stores/hooks/useStores";
 import { StoresView } from "@/features/stores/components/StoresView";
 
 export const StoresContainer = () => {
-  const {
-    search,
-    commune,
-    stores: storeItems,
-    page,
-    pageSize,
-    total,
-    isLoading,
-    error,
-    updateFilters,
-  } = useStores();
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const currentPage = Math.min(page, totalPages);
+  const { search, commune, stores, currentPage, totalPages, isLoading, error, setSearch, setCommune } = useStores();
+  // Règle de maquette : le premier magasin de la première page est mis en avant.
+  const highlightedStoreId = currentPage === 1 ? stores[0]?.id : undefined;
 
   return (
     <StoresView
       search={search}
       commune={commune}
-      stores={storeItems}
+      stores={stores}
+      highlightedStoreId={highlightedStoreId}
       currentPage={currentPage}
       totalPages={totalPages}
       isLoading={isLoading}
       error={error}
-      onSearchChange={(nextSearch) => updateFilters(nextSearch, commune)}
-      onCommuneChange={(nextCommune) => updateFilters(search, nextCommune)}
+      onSearchChange={setSearch}
+      onCommuneChange={setCommune}
     />
   );
 };

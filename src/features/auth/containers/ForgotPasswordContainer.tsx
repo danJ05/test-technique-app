@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ForgotPasswordFormView } from "@/features/auth/components/ForgotPasswordFormView";
 import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
 import { useForgotPasswordForm } from "@/features/auth/hooks/useForgotPasswordForm";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { routes } from "@/shared/config/routes";
 import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
 
 export const ForgotPasswordContainer = () => {
@@ -13,7 +13,7 @@ export const ForgotPasswordContainer = () => {
   const form = useForgotPasswordForm();
   const mutation = useForgotPassword();
   const onSubmit = form.handleSubmit((values) => mutation.mutate(values, {
-    onSuccess: ({ challengeId }) => router.push(authRoutes.verifyOtp(challengeId)),
+    onSuccess: ({ challengeId }) => router.push(routes.verifyOtp(challengeId)),
   }));
 
   return (
@@ -22,7 +22,7 @@ export const ForgotPasswordContainer = () => {
       error={form.formState.errors.email?.message}
       errorMessage={mutation.error ? getAuthErrorMessage(mutation.error) : undefined}
       isPending={mutation.isPending}
-      isSubmitDisabled={!form.formState.isValid || mutation.isPending}
+      isSubmitDisabled={mutation.isPending}
       onSubmit={onSubmit}
     />
   );

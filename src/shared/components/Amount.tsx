@@ -9,7 +9,7 @@ export interface AmountProps {
 }
 
 export const Amount = ({ value, signed = true, colored = false, className }: AmountProps) => (
-  <span className={cn("whitespace-nowrap tabular-nums", colored && value > 0 && "text-success", className)}>
+  <span className={cn("whitespace-nowrap tabular-nums", colored && value > 0 && "text-success-strong", className)}>
     {formatCurrency(value, { signed })}
   </span>
 );

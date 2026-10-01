@@ -4,29 +4,26 @@ import { useState } from "react";
 
 import { CashiersView } from "@/features/store-detail/components/CashiersView";
 import { useCashiers } from "@/features/store-detail/hooks/useCashiers";
-import type { Cashier, CashierListParams, CashierStatus } from "@/services/stores";
-import { EMPTY_DATE_RANGE, toISODate, type DateRange } from "@/shared/utils/date";
-
-type CashierStatusFilter = CashierStatus | "all";
+import { toDateRangeParams, toFilterParam, type CashierStatusFilter } from "@/features/store-detail/lib/filters";
+import { EMPTY_DATE_RANGE, type DateRange } from "@/shared/utils/date";
 
 interface CashiersContainerProps {
   storeId: string;
   isActive: boolean;
   selectedCashierId?: string;
-  onCashierSelect: (cashier: Cashier) => void;
+  getCashierHref: (cashierId: string) => string;
+  onCashierSelect: (cashierId: string) => void;
 }
 
-export const CashiersContainer = ({ storeId, isActive, selectedCashierId, onCashierSelect }: CashiersContainerProps) => {
+export const CashiersContainer = ({ storeId, isActive, selectedCashierId, getCashierHref, onCashierSelect }: CashiersContainerProps) => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<CashierStatusFilter>("all");
   const [dateRange, setDateRange] = useState<DateRange>(EMPTY_DATE_RANGE);
-  const filters: CashierListParams = {
-    search,
-    status: status === "all" ? undefined : status,
-    from: dateRange.from ? toISODate(dateRange.from) : undefined,
-    to: dateRange.to ? toISODate(dateRange.to) : undefined,
-  };
-  const { cashiers, isLoading, error, refresh } = useCashiers(storeId, filters, isActive);
+  const { cashiers, isLoading, error, refresh } = useCashiers(
+    storeId,
+    { search, status: toFilterParam(status), ...toDateRangeParams(dateRange) },
+    isActive,
+  );
 
   return (
     <CashiersView
@@ -37,6 +34,7 @@ export const CashiersContainer = ({ storeId, isActive, selectedCashierId, onCash
       selectedCashierId={selectedCashierId}
       isLoading={isLoading}
       error={error}
+      getCashierHref={getCashierHref}
       onSearchChange={setSearch}
       onStatusChange={setStatus}
       onDateRangeChange={setDateRange}

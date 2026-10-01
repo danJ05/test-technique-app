@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 let browserQueryClient: QueryClient | undefined;
 
@@ -19,5 +20,8 @@ const getQueryClient = (): QueryClient => {
 };
 
 export const AppProviders = ({ children }: { children: ReactNode }) => (
-  <QueryClientProvider client={getQueryClient()}>{children}</QueryClientProvider>
+  <QueryClientProvider client={getQueryClient()}>
+    {children}
+    <Toaster position="top-center" richColors />
+  </QueryClientProvider>
 );

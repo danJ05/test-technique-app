@@ -9,6 +9,7 @@ import type {
   Transaction,
   TransactionListParams,
 } from "./types";
+import { waitForMockResponse } from "../mock-delay";
 
 const MOCK_STORE_COUNT = 60;
 const MOCK_STORE = {
@@ -48,8 +49,6 @@ const MOCK_STORE_DETAIL = {
   transactionCount: 1253,
   paymentMix: { cashReturn: 75, shoppingPayment: 25 },
 };
-
-const waitForMockResponse = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 250));
 
 const matchesDateRange = (value: string, from?: string, to?: string): boolean => {
   const date = value.slice(0, 10);

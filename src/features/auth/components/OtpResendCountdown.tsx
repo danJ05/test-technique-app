@@ -28,7 +28,11 @@ export const OtpResendCountdown = ({ isPending, onResend }: OtpResendCountdownPr
 
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-      <span className="text-ink" aria-live="polite">Pas encore reçu ? 00:{String(remainingSeconds).padStart(2, "0")}</span>
+      <span className="text-ink">Pas encore reçu ? 00:{String(remainingSeconds).padStart(2, "0")}</span>
+      {/* Annonce unique quand le renvoi devient possible, plutôt qu'à chaque seconde. */}
+      <span role="status" className="sr-only">
+        {remainingSeconds === 0 ? "Vous pouvez demander un nouveau code." : ""}
+      </span>
       <button
         type="button"
         disabled={remainingSeconds > 0 || isPending}

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { cn } from "@/shared/utils/cn";
 
@@ -17,7 +17,7 @@ const SIZE_CLASSES: Record<IconButtonSize, string> = {
   md: "size-10",
 };
 
-export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "aria-label"> {
+export interface IconButtonProps extends Omit<ComponentPropsWithRef<"button">, "aria-label"> {
   "aria-label": string;
   icon: ReactNode;
   variant?: IconButtonVariant;

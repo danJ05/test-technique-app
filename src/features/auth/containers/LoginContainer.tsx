@@ -1,40 +1,38 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { LoginFormView } from "@/features/auth/components/LoginFormView";
 import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
 import { createDemoSession } from "@/features/auth/lib/auth-session";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { MOCK_LOGIN_CREDENTIALS } from "@/services/auth";
+import { authDemoHints } from "@/services/auth";
+import { routes } from "@/shared/config/routes";
 
 export const LoginContainer = () => {
   const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
   const form = useLoginForm();
   const mutation = useLogin();
+  // Le Toaster est global (AppProviders) : le message reste visible après la redirection.
   const onSubmit = form.handleSubmit((values) => mutation.mutate(values, {
     onSuccess: ({ user }) => {
       createDemoSession();
-      setIsRedirecting(true);
-      toast.success(`Bienvenue, ${user.displayName}`, { duration: 3000 });
-      window.setTimeout(() => router.replace(authRoutes.store), 3000);
+      toast.success(`Bienvenue, ${user.displayName}`);
+      router.replace(routes.dashboard);
     },
   }));
+  const isBusy = mutation.isPending || mutation.isSuccess;
 
   return (
     <LoginFormView
       identifier={form.register("identifier")}
       password={form.register("password")}
-      demoIdentifier={MOCK_LOGIN_CREDENTIALS.identifier}
-      demoPassword={MOCK_LOGIN_CREDENTIALS.password}
+      demoCredentials={authDemoHints ?? undefined}
       errors={{ identifier: form.formState.errors.identifier?.message, password: form.formState.errors.password?.message }}
-      isPending={mutation.isPending || isRedirecting}
-      isSubmitDisabled={!form.formState.isValid || mutation.isPending || isRedirecting}
+      isPending={isBusy}
+      isSubmitDisabled={isBusy}
       errorMessage={mutation.error ? getAuthErrorMessage(mutation.error) : undefined}
       onSubmit={onSubmit}
     />

@@ -2,6 +2,8 @@ const CURRENCY_LABEL = "FCFA";
 
 const numberFormatter = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 
+export const formatNumber = (value: number): string => numberFormatter.format(value);
+
 export interface FormatCurrencyOptions {
   signed?: boolean;
 }

@@ -1,12 +1,15 @@
+import Link from "next/link";
 import { List, Pencil, RefreshCw, Repeat, UserX } from "lucide-react";
 
 import { DataTable, DateRangePicker, EmptyState, FilterBar, MaskedValue, type DataTableColumn } from "@/shared/components";
-import { Badge, Button, DebouncedSearchInput, FilterChip, IconButton, Skeleton } from "@/shared/ui";
-import type { Cashier, CashierStatus } from "@/services/stores";
-import type { DateRange } from "@/shared/utils/date";
-import { formatStoreDateTime } from "@/features/store-detail/utils";
-
-type CashierStatusFilter = CashierStatus | "all";
+import { Badge, Button, DebouncedSearchInput, FilterChip, IconButton, LoadingRegion, Skeleton } from "@/shared/ui";
+import { formatDateTime, type DateRange } from "@/shared/utils/date";
+import type { Cashier } from "@/services/stores";
+import {
+  CASHIER_STATUS_FILTER_OPTIONS,
+  CASHIER_STATUS_META,
+  type CashierStatusFilter,
+} from "@/features/store-detail/lib/filters";
 
 interface CashiersViewProps {
   cashiers: Cashier[];
@@ -16,37 +19,61 @@ interface CashiersViewProps {
   selectedCashierId?: string;
   isLoading: boolean;
   error: Error | null;
+  getCashierHref: (cashierId: string) => string;
   onSearchChange: (value: string) => void;
   onStatusChange: (value: CashierStatusFilter) => void;
   onDateRangeChange: (value: DateRange) => void;
   onRefresh: () => void;
-  onCashierSelect: (cashier: Cashier) => void;
+  onCashierSelect: (cashierId: string) => void;
 }
 
-const COLUMNS: DataTableColumn<Cashier>[] = [
-  { key: "username", header: "Utilisateur", cell: ({ username }) => <span className="font-bold">{username}</span> },
+const ROW_ACTIONS = [
+  { label: "Modifier", Icon: Pencil },
+  { label: "Réinitialiser", Icon: Repeat },
+  { label: "Historique", Icon: List },
+  { label: "Bloquer", Icon: UserX },
+] as const;
+
+const buildColumns = (getCashierHref: (cashierId: string) => string): DataTableColumn<Cashier>[] => [
+  {
+    key: "username",
+    header: "Utilisateur",
+    // Lien d'accès clavier / lecteur d'écran au détail ; la ligne entière reste cliquable à la souris.
+    cell: ({ id, username }) => (
+      <Link
+        href={getCashierHref(id)}
+        scroll={false}
+        aria-label={`Afficher les détails de ${username}`}
+        className="rounded-sm font-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        {username}
+      </Link>
+    ),
+  },
   {
     key: "accessKey",
     header: "Clé d'accès",
-    cell: ({ accessKey }) => <MaskedValue value={accessKey} label="la clé d'accès" />,
+    cell: ({ accessKey, username }) => <MaskedValue value={accessKey} label={`la clé d'accès de ${username}`} />,
   },
-  { key: "assignedAt", header: "Date d'affectation", cell: ({ assignedAt }) => formatStoreDateTime(assignedAt) },
+  { key: "assignedAt", header: "Date d'affectation", cell: ({ assignedAt }) => formatDateTime(assignedAt) },
   {
     key: "status",
     header: "Statut",
-    cell: ({ status }) => (
-      <Badge variant={status === "active" ? "success" : "neutral"}>{status === "active" ? "Actif" : "Bloqué"}</Badge>
-    ),
+    cell: ({ status }) => <Badge variant={CASHIER_STATUS_META[status].badgeVariant}>{CASHIER_STATUS_META[status].label}</Badge>,
   },
   {
     key: "actions",
     header: "Actions",
-    cell: () => (
+    cell: ({ username }) => (
       <div className="flex gap-1">
-        <IconButton aria-label="Modifier" tooltip="Modifier" icon={<Pencil className="size-4" aria-hidden="true" />} />
-        <IconButton aria-label="Réinitialiser" tooltip="Réinitialiser" icon={<Repeat className="size-4" aria-hidden="true" />} />
-        <IconButton aria-label="Historique" tooltip="Historique" icon={<List className="size-4" aria-hidden="true" />} />
-        <IconButton aria-label="Bloquer" tooltip="Bloquer" icon={<UserX className="size-4" aria-hidden="true" />} />
+        {ROW_ACTIONS.map(({ label, Icon }) => (
+          <IconButton
+            key={label}
+            aria-label={`${label} ${username}`}
+            tooltip={label}
+            icon={<Icon className="size-4" aria-hidden="true" />}
+          />
+        ))}
       </div>
     ),
   },
@@ -60,6 +87,7 @@ export const CashiersView = ({
   selectedCashierId,
   isLoading,
   error,
+  getCashierHref,
   onSearchChange,
   onStatusChange,
   onDateRangeChange,
@@ -69,7 +97,9 @@ export const CashiersView = ({
   const emptyState = error ? (
     <EmptyState title="Impossible de charger les caissiers" />
   ) : isLoading ? (
-    <Skeleton className="mx-6 my-4 h-12" />
+    <LoadingRegion label="Chargement des caissiers">
+      <Skeleton className="mx-6 my-4 h-12" />
+    </LoadingRegion>
   ) : (
     <EmptyState title="Aucun caissier trouvé" description="Modifiez vos filtres pour voir des résultats." />
   );
@@ -88,11 +118,7 @@ export const CashiersView = ({
                 onValueChange={onSearchChange}
                 containerClassName="sm:max-w-[280px]"
               />
-              {([
-                { value: "all", label: "Tous" },
-                { value: "active", label: "Actif" },
-                { value: "blocked", label: "Bloqué" },
-              ] as const).map(({ value, label }) => (
+              {CASHIER_STATUS_FILTER_OPTIONS.map(({ value, label }) => (
                 <FilterChip key={value} label={label} isActive={status === value} onClick={() => onStatusChange(value)} />
               ))}
               <DateRangePicker aria-label="Période d'affectation" value={dateRange} onChange={onDateRangeChange} />
@@ -110,12 +136,11 @@ export const CashiersView = ({
       </div>
       <DataTable
         caption="Liste des caissiers"
-        columns={COLUMNS}
+        columns={buildColumns(getCashierHref)}
         rows={cashiers}
         getRowKey={({ id }) => id}
         selectedRowKey={cashiers.some(({ id }) => id === selectedCashierId) ? selectedCashierId : undefined}
-        onRowActivate={onCashierSelect}
-        getRowLabel={({ username }) => `Afficher les détails de ${username}`}
+        onRowClick={({ id }) => onCashierSelect(id)}
         emptyState={emptyState}
       />
     </>

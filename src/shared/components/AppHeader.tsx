@@ -1,11 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import { Avatar } from "@/shared/ui/Avatar";
+import { routes } from "@/shared/config/routes";
 import { IconButton } from "@/shared/ui/IconButton";
 import { cn } from "@/shared/utils/cn";
 
@@ -60,11 +61,25 @@ const NavItem = ({ item, pathname, onNavigate }: NavItemProps) => {
   );
 };
 
-export const AppHeader = ({ items, homeHref = "/", userName, className }: AppHeaderProps) => {
+export const AppHeader = ({ items, homeHref = routes.dashboard, userName, className }: AppHeaderProps) => {
   const pathname = usePathname();
   const mobileNavId = useId();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMenu = (): void => setIsMenuOpen(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key !== "Escape") return;
+      setIsMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
 
   return (
     <header className={cn("relative z-10 rounded-card bg-white px-5 sm:px-8", className)}>
@@ -90,6 +105,7 @@ export const AppHeader = ({ items, homeHref = "/", userName, className }: AppHea
         <div className="flex items-center gap-2">
           <Avatar name={userName} />
           <IconButton
+            ref={menuButtonRef}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isMenuOpen}
             aria-controls={mobileNavId}

@@ -8,9 +8,9 @@ import { OtpFormView } from "@/features/auth/components/OtpFormView";
 import { useResendOtp } from "@/features/auth/hooks/useResendOtp";
 import { useOtpForm } from "@/features/auth/hooks/useOtpForm";
 import { useVerifyOtp } from "@/features/auth/hooks/useVerifyOtp";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { routes } from "@/shared/config/routes";
 import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
-import { MOCK_OTP_CODE } from "@/services/auth";
+import { authDemoHints } from "@/services/auth";
 
 export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
   const [resendTimerKey, setResendTimerKey] = useState(0);
@@ -19,7 +19,7 @@ export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
   const verifyMutation = useVerifyOtp();
   const resendMutation = useResendOtp();
   const onSubmit = otp.form.handleSubmit(({ code }) => verifyMutation.mutate({ challengeId, code }, {
-    onSuccess: ({ resetToken }) => router.push(authRoutes.resetPassword(resetToken)),
+    onSuccess: ({ resetToken }) => router.push(routes.resetPassword(resetToken)),
   }));
   const onResend = () => resendMutation.mutate(challengeId, {
     onSuccess: () => {
@@ -36,10 +36,10 @@ export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
     <OtpFormView
       challengeId={challengeId}
       digits={otp.digits}
-      demoCode={MOCK_OTP_CODE}
+      demoCode={authDemoHints?.otpCode}
       errorMessage={errorMessage}
       resendTimerKey={resendTimerKey}
-      isSubmitDisabled={!otp.form.formState.isValid || verifyMutation.isPending}
+      isSubmitDisabled={verifyMutation.isPending}
       isPending={verifyMutation.isPending}
       isResendPending={resendMutation.isPending}
       onSubmit={onSubmit}

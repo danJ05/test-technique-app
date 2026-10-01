@@ -18,6 +18,7 @@ interface StoresToolbarProps {
 export const StoresToolbar = ({ search, commune, onSearchChange, onCommuneChange }: StoresToolbarProps) => (
   <FilterBar
     title="Magasins"
+    headingLevel="h1"
     className="gap-x-5"
     filters={
       <>

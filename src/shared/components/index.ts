@@ -1,6 +1,5 @@
 export { Amount, type AmountProps } from "./Amount";
 export { AppHeader, type AppHeaderProps, type AppNavItem } from "./AppHeader";
-export { AuthCard, type AuthCardProps } from "./AuthCard";
 export { BirdIllustration, type BirdIllustrationProps } from "./brand/BirdIllustration";
 export { Logo, type LogoProps } from "./brand/Logo";
 export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from "./Breadcrumb";
@@ -15,5 +14,4 @@ export { InfoItem, type InfoItemProps } from "./InfoItem";
 export { MaskedValue, type MaskedValueProps } from "./MaskedValue";
 export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Pagination, type PaginationProps } from "./Pagination";
-export { StoreCard, type StoreCardProps } from "./StoreCard";
 export { Timeline, type TimelineItem, type TimelineProps } from "./Timeline";

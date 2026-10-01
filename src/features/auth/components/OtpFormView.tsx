@@ -1,7 +1,8 @@
 import type { ClipboardEvent, FormEventHandler, KeyboardEvent } from "react";
 import Link from "next/link";
 
-import { AuthCard } from "@/shared/components/AuthCard";
+import { AuthCard } from "./AuthCard";
+import { routes } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/Button";
 
 import { AuthNotice } from "./AuthNotice";
@@ -10,7 +11,7 @@ import { OtpResendCountdown } from "./OtpResendCountdown";
 interface OtpFormViewProps {
   challengeId: string;
   digits: string[];
-  demoCode: string;
+  demoCode?: string;
   errorMessage?: string;
   resendTimerKey: number;
   isSubmitDisabled: boolean;
@@ -45,7 +46,7 @@ export const OtpFormView = ({
       {!challengeId ? (
         <div className="flex flex-1 flex-col gap-4">
           <AuthNotice>Cette demande est absente ou expirée. Recommencez la procédure.</AuthNotice>
-          <Link href="/forgot-password" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+          <Link href={routes.forgotPassword} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
             Demander un nouveau code
           </Link>
         </div>
@@ -75,7 +76,7 @@ export const OtpFormView = ({
             </div>
           </fieldset>
           <OtpResendCountdown key={resendTimerKey} isPending={isResendPending} onResend={onResend} />
-          <p className="mt-2 text-xs text-muted-foreground">Code de démonstration : {demoCode}</p>
+          {demoCode && <p className="mt-2 text-xs text-muted-foreground">Code de démonstration : {demoCode}</p>}
           {errorMessage && <p id="otp-error" role="alert" className="mt-2 text-xs text-primary">{errorMessage}</p>}
           <Button type="submit" size="auth" className="mt-auto h-11 max-w-65 self-center text-sm" disabled={isSubmitDisabled} isLoading={isPending}>
             Valider

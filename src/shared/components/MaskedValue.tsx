@@ -16,6 +16,7 @@ export interface MaskedValueProps {
   onVisibleChange?: (isVisible: boolean) => void;
   showToggle?: boolean;
   className?: string;
+  valueClassName?: string;
   toggleClassName?: string;
 }
 
@@ -27,6 +28,7 @@ export const MaskedValue = ({
   onVisibleChange,
   showToggle = true,
   className,
+  valueClassName,
   toggleClassName,
 }: MaskedValueProps) => {
   const [internalVisible, setInternalVisible] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export const MaskedValue = ({
 
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
-      <span className="tabular-nums tracking-[0.2em]" aria-live="polite">
+      <span className={cn("tabular-nums", valueClassName ?? "tracking-[0.2em]")} aria-live="polite">
         {visible ? (
           value
         ) : (

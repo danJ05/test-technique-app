@@ -10,7 +10,7 @@ export const AuthNotice = ({ children, tone = "error" }: AuthNoticeProps) => (
   <p
     role={tone === "error" ? "alert" : "status"}
     aria-live={tone === "error" ? "assertive" : "polite"}
-    className={cn("text-sm", tone === "error" ? "text-primary" : "text-success")}
+    className={cn("text-sm", tone === "error" ? "text-primary" : "text-success-strong")}
   >
     {children}
   </p>
