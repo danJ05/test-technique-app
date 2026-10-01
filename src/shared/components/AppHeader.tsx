@@ -15,6 +15,7 @@ export interface AppNavItem {
   label: string;
   /** Sans `href`, l'entrée est affichée mais désactivée (page non disponible). */
   href?: string;
+  activePaths?: readonly string[];
 }
 
 export interface AppHeaderProps {
@@ -45,7 +46,7 @@ const NavItem = ({ item, pathname, onNavigate }: NavItemProps) => {
     );
   }
 
-  const isActive = isPathActive(pathname, item.href);
+  const isActive = [item.href, ...(item.activePaths ?? [])].some((href) => isPathActive(pathname, href));
 
   return (
     <Link

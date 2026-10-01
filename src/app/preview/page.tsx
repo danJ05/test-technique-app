@@ -24,6 +24,7 @@ import {
   Timeline,
   type DataTableColumn,
 } from "@/shared/components";
+import { APP_NAV_ITEMS } from "@/shared/config/app-navigation";
 import {
   Badge,
   Button,
@@ -85,16 +86,7 @@ export default function PreviewPage() {
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 p-4 sm:p-8">
       <div>
-        <AppHeader
-          items={[
-            { label: "Tableau de bord", href: "/" },
-            { label: "Magasins", href: "/preview" },
-            { label: "Transactions" },
-            { label: "Clients" },
-            { label: "Gestions" },
-            { label: "Statistiques" },
-          ]}
-        />
+        <AppHeader items={APP_NAV_ITEMS} />
         <Breadcrumb items={[{ label: "Magasins", href: "/preview" }, { label: "Détails" }]} />
       </div>
 
