@@ -15,6 +15,7 @@ interface StoreDetailViewProps {
   transactionsTabHref: string;
   cashiersPanel: ReactNode;
   transactionsPanel: ReactNode;
+  drawer?: ReactNode;
 }
 
 export const StoreDetailView = ({
@@ -24,6 +25,7 @@ export const StoreDetailView = ({
   transactionsTabHref,
   cashiersPanel,
   transactionsPanel,
+  drawer,
 }: StoreDetailViewProps) => (
   <div className="mx-auto flex w-full max-w-360 flex-col gap-6 p-4 sm:p-8">
     <div>
@@ -32,25 +34,31 @@ export const StoreDetailView = ({
     </div>
 
     <PageHeader title="Détails Magasin" backHref="/store" />
-    <StoreSummary store={store} />
 
-    <Card className="flex min-h-130 flex-col gap-6 px-0 sm:px-0">
-      <div className="px-5 sm:px-6">
-        <SegmentedControl
-          aria-label="Onglets du magasin"
-          value={activeTab}
-          items={[
-            { value: "transactions", label: "Transactions", href: transactionsTabHref },
-            { value: "cashiers", label: "Caissiers", href: cashierTabHref },
-          ]}
-        />
+    <div className={drawer ? "grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]" : "flex min-w-0 flex-col gap-6"}>
+      <div className="flex min-w-0 flex-col gap-6">
+        <StoreSummary store={store} />
+
+        <Card className="flex min-h-130 flex-col gap-6 px-0 sm:px-0">
+          <div className="px-5 sm:px-6">
+            <SegmentedControl
+              aria-label="Onglets du magasin"
+              value={activeTab}
+              items={[
+                { value: "transactions", label: "Transactions", href: transactionsTabHref },
+                { value: "cashiers", label: "Caissiers", href: cashierTabHref },
+              ]}
+            />
+          </div>
+          <div role="tabpanel" aria-label="Caissiers" hidden={activeTab !== "cashiers"}>
+            {cashiersPanel}
+          </div>
+          <div role="tabpanel" aria-label="Transactions" hidden={activeTab !== "transactions"}>
+            {transactionsPanel}
+          </div>
+        </Card>
       </div>
-      <div role="tabpanel" aria-label="Caissiers" hidden={activeTab !== "cashiers"}>
-        {cashiersPanel}
-      </div>
-      <div role="tabpanel" aria-label="Transactions" hidden={activeTab !== "transactions"}>
-        {transactionsPanel}
-      </div>
-    </Card>
+      {drawer}
+    </div>
   </div>
 );

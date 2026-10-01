@@ -1,7 +1,10 @@
 export { storesApiMock } from "./api.mock";
 export type {
 	Cashier,
+	CashierDetail,
 	CashierListParams,
+	CashierRecentTransaction,
+	CashierStoreHistory,
 	CashierStatus,
 	Store,
 	StoreDetail,

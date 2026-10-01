@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 
 import { FilterBar } from "@/shared/components";
-import { Button, SearchInput, Select } from "@/shared/ui";
+import { Button, DebouncedSearchInput, Select } from "@/shared/ui";
 
 const COMMUNE_OPTIONS = [
   { value: "", label: "Commune" },
@@ -21,11 +21,11 @@ export const StoresToolbar = ({ search, commune, onSearchChange, onCommuneChange
     className="gap-x-5"
     filters={
       <>
-        <SearchInput
+        <DebouncedSearchInput
           aria-label="Rechercher un magasin"
           placeholder="Nom du magasin, code magasin, Commune"
           value={search}
-          onChange={(event) => onSearchChange(event.currentTarget.value)}
+          onValueChange={onSearchChange}
           containerClassName="w-full sm:max-w-[320px]"
         />
         <Select

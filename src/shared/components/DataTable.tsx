@@ -17,6 +17,8 @@ export interface DataTableProps<TRow> {
   /** Titre lu par les lecteurs d'écran. */
   caption: string;
   selectedRowKey?: string;
+  onRowActivate?: (row: TRow) => void;
+  getRowLabel?: (row: TRow) => string;
   emptyState?: ReactNode;
   minWidthClassName?: string;
   className?: string;
@@ -28,6 +30,8 @@ export const DataTable = <TRow,>({
   getRowKey,
   caption,
   selectedRowKey,
+  onRowActivate,
+  getRowLabel,
   emptyState,
   minWidthClassName = "min-w-[720px]",
   className,
@@ -62,7 +66,22 @@ export const DataTable = <TRow,>({
               <tr
                 key={rowKey}
                 aria-current={isSelected ? "true" : undefined}
-                className={cn("transition-colors", isSelected ? "bg-surface" : "hover:bg-surface/60")}
+                aria-label={onRowActivate ? getRowLabel?.(row) : undefined}
+                tabIndex={onRowActivate ? 0 : undefined}
+                onClick={onRowActivate ? (event) => {
+                  if (event.target instanceof Element && event.target.closest("button, a, input, select, textarea, [role='button']")) return;
+                  onRowActivate(row);
+                } : undefined}
+                onKeyDown={onRowActivate ? (event) => {
+                  if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
+                  event.preventDefault();
+                  onRowActivate(row);
+                } : undefined}
+                className={cn(
+                  "transition-colors",
+                  onRowActivate && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary",
+                  isSelected ? "bg-surface" : "hover:bg-surface/60",
+                )}
               >
                 {columns.map((column) => (
                   <td key={column.key} className={cn("px-4 py-3 align-middle first:pl-6 last:pr-6", column.className)}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { OtpFormView } from "@/features/auth/components/OtpFormView";
@@ -12,6 +13,7 @@ import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
 import { MOCK_OTP_CODE } from "@/services/auth";
 
 export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
+  const [resendTimerKey, setResendTimerKey] = useState(0);
   const router = useRouter();
   const otp = useOtpForm();
   const verifyMutation = useVerifyOtp();
@@ -21,7 +23,7 @@ export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
   }));
   const onResend = () => resendMutation.mutate(challengeId, {
     onSuccess: () => {
-      otp.restartResendTimer();
+      setResendTimerKey((key) => key + 1);
       toast.success("Un nouveau code a été envoyé.");
     },
   });
@@ -36,7 +38,7 @@ export const OtpContainer = ({ challengeId }: { challengeId: string }) => {
       digits={otp.digits}
       demoCode={MOCK_OTP_CODE}
       errorMessage={errorMessage}
-      remainingSeconds={otp.remainingSeconds}
+      resendTimerKey={resendTimerKey}
       isSubmitDisabled={!otp.form.formState.isValid || verifyMutation.isPending}
       isPending={verifyMutation.isPending}
       isResendPending={resendMutation.isPending}

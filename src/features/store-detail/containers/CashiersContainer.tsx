@@ -4,12 +4,19 @@ import { useState } from "react";
 
 import { CashiersView } from "@/features/store-detail/components/CashiersView";
 import { useCashiers } from "@/features/store-detail/hooks/useCashiers";
-import type { CashierListParams, CashierStatus } from "@/services/stores";
+import type { Cashier, CashierListParams, CashierStatus } from "@/services/stores";
 import { EMPTY_DATE_RANGE, toISODate, type DateRange } from "@/shared/utils/date";
 
 type CashierStatusFilter = CashierStatus | "all";
 
-export const CashiersContainer = ({ storeId, isActive }: { storeId: string; isActive: boolean }) => {
+interface CashiersContainerProps {
+  storeId: string;
+  isActive: boolean;
+  selectedCashierId?: string;
+  onCashierSelect: (cashier: Cashier) => void;
+}
+
+export const CashiersContainer = ({ storeId, isActive, selectedCashierId, onCashierSelect }: CashiersContainerProps) => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<CashierStatusFilter>("all");
   const [dateRange, setDateRange] = useState<DateRange>(EMPTY_DATE_RANGE);
@@ -27,12 +34,14 @@ export const CashiersContainer = ({ storeId, isActive }: { storeId: string; isAc
       search={search}
       status={status}
       dateRange={dateRange}
+      selectedCashierId={selectedCashierId}
       isLoading={isLoading}
       error={error}
       onSearchChange={setSearch}
       onStatusChange={setStatus}
       onDateRangeChange={setDateRange}
       onRefresh={() => void refresh()}
+      onCashierSelect={onCashierSelect}
     />
   );
 };

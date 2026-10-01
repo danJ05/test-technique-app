@@ -1,7 +1,7 @@
 import { RefreshCw } from "lucide-react";
 
 import { Amount, DataTable, DateRangePicker, EmptyState, FilterBar, type DataTableColumn } from "@/shared/components";
-import { Button, FilterChip, IconButton, SearchInput, Skeleton } from "@/shared/ui";
+import { Button, DebouncedSearchInput, FilterChip, IconButton, Skeleton } from "@/shared/ui";
 import type { Transaction, TransactionType } from "@/services/stores";
 import type { DateRange } from "@/shared/utils/date";
 import { formatStoreDateTime } from "@/features/store-detail/utils";
@@ -55,36 +55,38 @@ export const TransactionsView = ({
 
   return (
     <>
-      <FilterBar
-        title="Transactions"
-        filters={
-          <>
-            <SearchInput
-              aria-label="Rechercher une transaction"
-              placeholder="Type, point de vente, client, n° transaction"
-              value={search}
-              onChange={(event) => onSearchChange(event.currentTarget.value)}
-              containerClassName="sm:max-w-[280px]"
-            />
-            {([
-              { value: "all", label: "Tous" },
-              { value: "cash-return", label: "Rendu monnaie" },
-              { value: "shopping-payment", label: "Paiement courses" },
-            ] as const).map(({ value, label }) => (
-              <FilterChip key={value} label={label} isActive={type === value} onClick={() => onTypeChange(value)} />
-            ))}
-            <DateRangePicker aria-label="Période des transactions" value={dateRange} onChange={onDateRangeChange} />
-            <IconButton
-              aria-label="Actualiser les transactions"
-              tooltip="Actualiser"
-              icon={<RefreshCw className="size-4" aria-hidden="true" />}
-              onClick={onRefresh}
-              disabled={isLoading}
-            />
-          </>
-        }
-        action={<Button size="app">Exporter</Button>}
-      />
+      <div className="px-5 pb-4 sm:px-6">
+        <FilterBar
+          title="Transactions"
+          filters={
+            <>
+              <DebouncedSearchInput
+                aria-label="Rechercher une transaction"
+                placeholder="Type, point de vente, client, n° transaction"
+                value={search}
+                onValueChange={onSearchChange}
+                containerClassName="sm:max-w-[280px]"
+              />
+              {([
+                { value: "all", label: "Tous" },
+                { value: "cash-return", label: "Rendu monnaie" },
+                { value: "shopping-payment", label: "Paiement courses" },
+              ] as const).map(({ value, label }) => (
+                <FilterChip key={value} label={label} isActive={type === value} onClick={() => onTypeChange(value)} />
+              ))}
+              <DateRangePicker aria-label="Période des transactions" value={dateRange} onChange={onDateRangeChange} />
+              <IconButton
+                aria-label="Actualiser les transactions"
+                tooltip="Actualiser"
+                icon={<RefreshCw className="size-4" aria-hidden="true" />}
+                onClick={onRefresh}
+                disabled={isLoading}
+              />
+            </>
+          }
+          action={<Button size="app">Exporter</Button>}
+        />
+      </div>
       <DataTable
         caption="Liste des transactions"
         columns={COLUMNS}

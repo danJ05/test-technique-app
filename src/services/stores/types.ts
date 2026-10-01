@@ -41,6 +41,25 @@ export interface Cashier {
   status: CashierStatus;
 }
 
+export interface CashierStoreHistory {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface CashierRecentTransaction {
+  id: string;
+  label: string;
+  amount: number;
+}
+
+export interface CashierDetail {
+  cashierId: string;
+  username: string;
+  storeHistory: CashierStoreHistory[];
+  recentTransactions: CashierRecentTransaction[];
+}
+
 export interface CashierListParams {
   search?: string;
   status?: CashierStatus;

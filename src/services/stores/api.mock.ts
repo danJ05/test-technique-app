@@ -1,5 +1,6 @@
 import type {
   Cashier,
+  CashierDetail,
   CashierListParams,
   Store,
   StoreDetail,
@@ -99,6 +100,30 @@ export const storesApiMock = {
       const matchesStatus = !status || cashierStatus === status;
       return matchesSearch && matchesStatus && matchesDateRange(assignedAt, from, to);
     });
+  },
+
+  getCashierDetail: async (storeId: string, cashierId: string): Promise<CashierDetail | null> => {
+    await waitForMockResponse();
+    if (!STORES.some(({ id }) => id === storeId)) return null;
+
+    const cashier = CASHIERS.find(({ id }) => id === cashierId);
+    if (!cashier) return null;
+
+    return {
+      cashierId,
+      username: cashier.username,
+      storeHistory: [
+        { id: `${cashierId}-history-1`, title: "Zone 4, Abidjan", description: "Depuis le 20/01/2025" },
+        { id: `${cashierId}-history-2`, title: "Angré 8e Tranche", description: "Du 18/04/2024 au 30/08/2025" },
+        { id: `${cashierId}-history-3`, title: "II Plateaux Latrille", description: "Du 18/04/2024 au 30/08/2025" },
+      ],
+      recentTransactions: [
+        { id: `${cashierId}-transaction-1`, label: "Paiement course", amount: 2500 },
+        { id: `${cashierId}-transaction-2`, label: "Paiement course", amount: 2500 },
+        { id: `${cashierId}-transaction-3`, label: "Paiement course", amount: 2500 },
+        { id: `${cashierId}-transaction-4`, label: "Paiement course", amount: 2500 },
+      ],
+    };
   },
 
   listTransactions: async (
