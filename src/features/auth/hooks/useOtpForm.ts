@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent } from "react";
+import { useRef, type ClipboardEvent, type KeyboardEvent } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 
 import { otpSchema, type OtpFormValues } from "@/features/auth/schemas/auth.schemas";
 
 const OTP_LENGTH = 4;
-const RESEND_DELAY_SECONDS = 30;
 
 export const useOtpForm = () => {
-  const [remainingSeconds, setRemainingSeconds] = useState(RESEND_DELAY_SECONDS);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const form = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
@@ -19,22 +17,6 @@ export const useOtpForm = () => {
   });
   const code = useWatch({ control: form.control, name: "code" });
   const digits = Array.from({ length: OTP_LENGTH }, (_, index) => code[index] ?? "");
-
-  useEffect(() => {
-    if (remainingSeconds === 0) return;
-
-    const timer = window.setInterval(() => {
-      setRemainingSeconds((seconds) => {
-        if (seconds <= 1) {
-          window.clearInterval(timer);
-          return 0;
-        }
-        return seconds - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [remainingSeconds]);
 
   const setPastedCode = (value: string) => {
     const pastedDigits = value.replace(/\D/g, "").slice(0, OTP_LENGTH);
@@ -76,7 +58,5 @@ export const useOtpForm = () => {
     onDigitKeyDown,
     onPaste,
     onInputRef: setInputRef,
-    remainingSeconds,
-    restartResendTimer: () => setRemainingSeconds(RESEND_DELAY_SECONDS),
   };
 };

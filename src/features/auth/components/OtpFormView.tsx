@@ -5,13 +5,14 @@ import { AuthCard } from "@/shared/components/AuthCard";
 import { Button } from "@/shared/ui/Button";
 
 import { AuthNotice } from "./AuthNotice";
+import { OtpResendCountdown } from "./OtpResendCountdown";
 
 interface OtpFormViewProps {
   challengeId: string;
   digits: string[];
   demoCode: string;
   errorMessage?: string;
-  remainingSeconds: number;
+  resendTimerKey: number;
   isSubmitDisabled: boolean;
   isPending: boolean;
   isResendPending: boolean;
@@ -28,7 +29,7 @@ export const OtpFormView = ({
   digits,
   demoCode,
   errorMessage,
-  remainingSeconds,
+  resendTimerKey,
   isSubmitDisabled,
   isPending,
   isResendPending,
@@ -39,8 +40,6 @@ export const OtpFormView = ({
   onInputRef,
   onResend,
 }: OtpFormViewProps) => {
-  const formattedTime = `00:${String(remainingSeconds).padStart(2, "0")}`;
-
   return (
     <AuthCard compact title="Code OTP" description="Veuillez saisir le code OTP reçu par message sur votre adresse email">
       {!challengeId ? (
@@ -75,17 +74,7 @@ export const OtpFormView = ({
               ))}
             </div>
           </fieldset>
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-ink">Pas encore reçu ? {formattedTime}</span>
-            <button
-              type="button"
-              disabled={remainingSeconds > 0 || isResendPending}
-              onClick={onResend}
-              className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:text-muted-foreground disabled:no-underline"
-            >
-              Renvoyer
-            </button>
-          </div>
+          <OtpResendCountdown key={resendTimerKey} isPending={isResendPending} onResend={onResend} />
           <p className="mt-2 text-xs text-muted-foreground">Code de démonstration : {demoCode}</p>
           {errorMessage && <p id="otp-error" role="alert" className="mt-2 text-xs text-primary">{errorMessage}</p>}
           <Button type="submit" size="auth" className="mt-auto h-11 max-w-65 self-center text-sm" disabled={isSubmitDisabled} isLoading={isPending}>

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LoginFormView } from "@/features/auth/components/LoginFormView";
 import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
 import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { createDemoSession } from "@/features/auth/lib/auth-session";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { useLogin } from "@/features/auth/hooks/useLogin";
 import { MOCK_LOGIN_CREDENTIALS } from "@/services/auth";
@@ -18,9 +19,10 @@ export const LoginContainer = () => {
   const mutation = useLogin();
   const onSubmit = form.handleSubmit((values) => mutation.mutate(values, {
     onSuccess: ({ user }) => {
+      createDemoSession();
       setIsRedirecting(true);
       toast.success(`Bienvenue, ${user.displayName}`, { duration: 3000 });
-      window.setTimeout(() => router.replace(authRoutes.dashboard), 3000);
+      window.setTimeout(() => router.replace(authRoutes.store), 3000);
     },
   }));
 
