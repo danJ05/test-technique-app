@@ -40,7 +40,7 @@ export const StoresResults = ({
             name={name}
             code={index === 0 && currentPage === 1 ? undefined : code}
             location={location}
-            href="/preview"
+            href={`/store/${id}`}
             isHighlighted={index === 0 && currentPage === 1}
           />
         ))}

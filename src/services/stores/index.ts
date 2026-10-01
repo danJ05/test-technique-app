@@ -1,5 +1,16 @@
 export { storesApiMock } from "./api.mock";
-export type { Store, StoreListParams, StoreListResponse } from "./types";
+export type {
+	Cashier,
+	CashierListParams,
+	CashierStatus,
+	Store,
+	StoreDetail,
+	StoreListParams,
+	StoreListResponse,
+	Transaction,
+	TransactionListParams,
+	TransactionType,
+} from "./types";
 
 import { storesApiMock } from "./api.mock";
 
