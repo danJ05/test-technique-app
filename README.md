@@ -15,11 +15,11 @@ Ouvrir [http://localhost:3000](http://localhost:3000). La racine redirige vers `
 
 ## Parcours de démonstration
 
-- Connexion : identifiant `demo`, mot de passe `Demo1234!`. Une connexion réussie affiche un toast, crée un cookie de démonstration valable huit heures, puis redirige vers `/store` après trois secondes.
+- Connexion : identifiant `demo`, mot de passe `Demo1234!`. Une connexion réussie affiche un toast, crée un cookie de démonstration valable huit heures, puis redirige vers `/dashboard` après trois secondes.
 - Erreurs de connexion : `réseau` simule une erreur réseau et `serveur` une erreur serveur. Toute autre combinaison échoue.
 - Mot de passe oublié : saisir une adresse email valide, puis utiliser le code OTP `1234` pour continuer vers `/reset-password`.
 
-Ces données et le cookie sont réservés à la démonstration. Le cookie permet au proxy de protéger `/store` dans le parcours de test, mais ne constitue pas une session backend ni une protection adaptée à des données réelles.
+Ces données et le cookie sont réservés à la démonstration. Le cookie permet au proxy de protéger `/dashboard` et `/store` dans le parcours de test, mais ne constitue pas une session backend ni une protection adaptée à des données réelles.
 
 ## Flux d’architecture
 

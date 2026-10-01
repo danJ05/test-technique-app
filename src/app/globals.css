@@ -4,16 +4,19 @@
   --color-primary: #e0001a;
   --color-primary-hover: #c20017;
   --color-primary-soft: #ffe8e8;
-  --color-primary-light: #ff6b78;
+  /* Début du dégradé des cartes mises en avant : contraste ≥ 4,5:1 avec le texte blanc. */
+  --color-primary-bright: #e62236;
 
+  /* `success` : graphiques et pastilles ; `success-strong` : texte et fonds sous texte blanc (AA). */
   --color-success: #5cb548;
+  --color-success-strong: #2e7d32;
   --color-ink: #111111;
   --color-surface: #f2f2f4;
   --color-muted: #e7e7ea;
-  --color-muted-foreground: #8b8b91;
+  --color-muted-foreground: #636369;
   --color-border: #d9d9dd;
   --color-table-head: #f6f6f7;
-  --color-disabled: #9b9b9b;
+  --color-disabled: #6b6b70;
 
   --radius-pill: 40px;
   --radius-button: 10px;
@@ -32,4 +35,15 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

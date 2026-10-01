@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { storesApi, type TransactionListParams } from "@/services/stores";
 
@@ -9,6 +9,8 @@ export const useTransactions = (storeId: string, filters: TransactionListParams,
     queryKey: ["store-detail", storeId, "transactions", filters],
     queryFn: () => storesApi.listTransactions(storeId, filters),
     enabled: Boolean(storeId) && enabled,
+    // Garde le tableau affiché pendant le changement de filtres.
+    placeholderData: keepPreviousData,
   });
 
   return {

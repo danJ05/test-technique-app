@@ -17,8 +17,11 @@ export interface DataTableProps<TRow> {
   /** Titre lu par les lecteurs d'écran. */
   caption: string;
   selectedRowKey?: string;
-  onRowActivate?: (row: TRow) => void;
-  getRowLabel?: (row: TRow) => string;
+  /**
+   * Confort souris : toute la ligne est cliquable. L'accès clavier et lecteur d'écran
+   * passe par un lien rendu dans une cellule (ex. le nom), qui mène à la même destination.
+   */
+  onRowClick?: (row: TRow) => void;
   emptyState?: ReactNode;
   minWidthClassName?: string;
   className?: string;
@@ -30,8 +33,7 @@ export const DataTable = <TRow,>({
   getRowKey,
   caption,
   selectedRowKey,
-  onRowActivate,
-  getRowLabel,
+  onRowClick,
   emptyState,
   minWidthClassName = "min-w-[720px]",
   className,
@@ -66,20 +68,13 @@ export const DataTable = <TRow,>({
               <tr
                 key={rowKey}
                 aria-current={isSelected ? "true" : undefined}
-                aria-label={onRowActivate ? getRowLabel?.(row) : undefined}
-                tabIndex={onRowActivate ? 0 : undefined}
-                onClick={onRowActivate ? (event) => {
+                onClick={onRowClick ? (event) => {
                   if (event.target instanceof Element && event.target.closest("button, a, input, select, textarea, [role='button']")) return;
-                  onRowActivate(row);
-                } : undefined}
-                onKeyDown={onRowActivate ? (event) => {
-                  if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
-                  event.preventDefault();
-                  onRowActivate(row);
+                  onRowClick(row);
                 } : undefined}
                 className={cn(
                   "transition-colors",
-                  onRowActivate && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary",
+                  onRowClick && "cursor-pointer",
                   isSelected ? "bg-surface" : "hover:bg-surface/60",
                 )}
               >

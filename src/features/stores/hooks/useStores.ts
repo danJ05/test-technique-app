@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { storesApi } from "@/services/stores";
 import { buildPageHref } from "@/shared/utils/pagination";
@@ -25,25 +25,30 @@ export const useStores = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["stores", { search, commune, page, pageSize: PAGE_SIZE }],
     queryFn: () => storesApi.list({ search, commune, page, pageSize: PAGE_SIZE }),
+    // Garde la grille affichée pendant la recherche et la pagination, sans retour au squelette.
+    placeholderData: keepPreviousData,
   });
 
   const updateFilters = useCallback((nextSearch: string, nextCommune: string): void => {
-    const nextHref = buildPageHref(pathname, 1, {
-      search: nextSearch,
-      commune: nextCommune,
-    });
-    router.replace(nextHref, { scroll: false });
+    router.replace(buildPageHref(pathname, 1, { search: nextSearch, commune: nextCommune }), { scroll: false });
   }, [pathname, router]);
+
+  // Callbacks stables : la recherche debouncée ne relance pas son minuteur à chaque rendu.
+  const setSearch = useCallback((nextSearch: string) => updateFilters(nextSearch, commune), [updateFilters, commune]);
+  const setCommune = useCallback((nextCommune: string) => updateFilters(search, nextCommune), [updateFilters, search]);
+
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return {
     search,
     commune,
-    page: data?.page ?? page,
-    pageSize: PAGE_SIZE,
+    currentPage: Math.min(data?.page ?? page, totalPages),
+    totalPages,
     stores: data?.items ?? [],
-    total: data?.total ?? 0,
     isLoading,
     error,
-    updateFilters,
+    setSearch,
+    setCommune,
   };
 };

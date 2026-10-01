@@ -9,5 +9,5 @@ export const useResetPasswordForm = () =>
   useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: { password: "", confirmation: "" },
-    mode: "onChange",
+    mode: "onTouched",
   });

@@ -13,7 +13,7 @@ export const useOtpForm = () => {
   const form = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
     defaultValues: { code: "" },
-    mode: "onChange",
+    mode: "onTouched",
   });
   const code = useWatch({ control: form.control, name: "code" });
   const digits = Array.from({ length: OTP_LENGTH }, (_, index) => code[index] ?? "");

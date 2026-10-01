@@ -1,4 +1,5 @@
 import { ChartLegend, DonutChart, InfoItem } from "@/shared/components";
+import { TRANSACTION_LEGEND_ITEMS, toTransactionSegments } from "@/shared/config/transaction-types";
 import { Card } from "@/shared/ui";
 import type { StoreDetail } from "@/services/stores";
 
@@ -19,17 +20,12 @@ export const StoreSummary = ({ store }: StoreSummaryProps) => (
     <div className="flex items-center justify-center gap-4 sm:gap-6">
       <DonutChart
         sizeClassName="size-20 sm:size-24"
-        segments={[
-          { label: "Rendu monnaie", value: store.paymentMix.cashReturn, strokeClassName: "stroke-primary" },
-          { label: "Paiement course", value: store.paymentMix.shoppingPayment, strokeClassName: "stroke-success" },
-        ]}
+        segments={toTransactionSegments({
+          "cash-return": store.paymentMix.cashReturn,
+          "shopping-payment": store.paymentMix.shoppingPayment,
+        })}
       />
-      <ChartLegend
-        items={[
-          { label: "Rendu monnaie", dotClassName: "bg-primary" },
-          { label: "Paiement course", dotClassName: "bg-success" },
-        ]}
-      />
+      <ChartLegend items={TRANSACTION_LEGEND_ITEMS} />
     </div>
   </Card>
 );

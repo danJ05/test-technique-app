@@ -9,5 +9,5 @@ export const useForgotPasswordForm = () =>
   useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
-    mode: "onChange",
+    mode: "onTouched",
   });

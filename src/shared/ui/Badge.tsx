@@ -5,7 +5,7 @@ import { cn } from "@/shared/utils/cn";
 export type BadgeVariant = "success" | "neutral";
 
 const VARIANT_CLASSES: Record<BadgeVariant, string> = {
-  success: "bg-success",
+  success: "bg-success-strong",
   neutral: "bg-disabled",
 };
 

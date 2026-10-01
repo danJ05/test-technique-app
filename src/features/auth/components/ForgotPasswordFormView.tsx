@@ -1,11 +1,11 @@
 import type { FormEventHandler } from "react";
 import Link from "next/link";
 
-import { AuthCard } from "@/shared/components/AuthCard";
+import { AuthCard } from "./AuthCard";
 import { Button } from "@/shared/ui/Button";
 import { FormField, getFieldErrorId } from "@/shared/ui/FormField";
 import { Input, type InputProps } from "@/shared/ui/Input";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { routes } from "@/shared/config/routes";
 
 import { AuthNotice } from "./AuthNotice";
 
@@ -34,7 +34,7 @@ export const ForgotPasswordFormView = ({ email, error, errorMessage, isPending, 
         />
       </FormField>
       {errorMessage && <AuthNotice>{errorMessage}</AuthNotice>}
-      <Link href={authRoutes.login} className="mt-4 self-end text-xs font-medium text-primary underline-offset-4 hover:underline">
+      <Link href={routes.login} className="mt-4 self-end text-xs font-medium text-primary underline-offset-4 hover:underline">
         Retour à la connexion
       </Link>
       <Button type="submit" size="auth" className="mt-auto h-11 max-w-65 self-center text-sm" disabled={isSubmitDisabled} isLoading={isPending}>

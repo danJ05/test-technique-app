@@ -1,20 +1,19 @@
 import type { FormEventHandler } from "react";
 import Link from "next/link";
 
-import { AuthCard } from "@/shared/components/AuthCard";
+import { AuthCard } from "./AuthCard";
 import { Button } from "@/shared/ui/Button";
 import { FormField, getFieldErrorId } from "@/shared/ui/FormField";
 import { Input, type InputProps } from "@/shared/ui/Input";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { routes } from "@/shared/config/routes";
 
 import { AuthNotice } from "./AuthNotice";
 
 interface LoginFormViewProps {
   identifier: Pick<InputProps, "name" | "onBlur" | "onChange" | "ref">;
   password: Pick<InputProps, "name" | "onBlur" | "onChange" | "ref">;
-  demoIdentifier: string;
-  demoPassword: string;
+  demoCredentials?: { identifier: string; password: string };
   errors: { identifier?: string; password?: string };
   isPending: boolean;
   isSubmitDisabled: boolean;
@@ -25,8 +24,7 @@ interface LoginFormViewProps {
 export const LoginFormView = ({
   identifier,
   password,
-  demoIdentifier,
-  demoPassword,
+  demoCredentials,
   errors,
   isPending,
   isSubmitDisabled,
@@ -58,13 +56,15 @@ export const LoginFormView = ({
         </FormField>
       </div>
       <div className="mt-3 text-right">
-        <Link href={authRoutes.forgotPassword} className="text-xs font-medium text-primary underline-offset-4 hover:underline">
+        <Link href={routes.forgotPassword} className="text-xs font-medium text-primary underline-offset-4 hover:underline">
           Mot de passe oublié
         </Link>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">
-        Démo : {demoIdentifier} / {demoPassword}
-      </p>
+      {demoCredentials && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          Démo : {demoCredentials.identifier} / {demoCredentials.password}
+        </p>
+      )}
       {errorMessage && <AuthNotice>{errorMessage}</AuthNotice>}
       <Button type="submit" size="auth" className="mt-auto h-11 max-w-65 self-center text-sm" disabled={isSubmitDisabled} isLoading={isPending}>
         Se connecter

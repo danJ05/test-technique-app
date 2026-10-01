@@ -8,12 +8,13 @@ export {
   type ButtonStyleOptions,
   type ButtonVariant,
 } from "./Button";
-export { Card, type CardElement, type CardProps } from "./Card";
+export { Card, type CardElement, type CardProps, type CardTone } from "./Card";
 export { DebouncedSearchInput, type DebouncedSearchInputProps } from "./DebouncedSearchInput";
 export { FilterChip, filterChipClassName, type FilterChipProps } from "./FilterChip";
 export { FormField, getFieldErrorId, type FormFieldProps } from "./FormField";
 export { IconButton, type IconButtonProps, type IconButtonSize, type IconButtonVariant } from "./IconButton";
 export { Input, type InputProps } from "./Input";
+export { LoadingRegion, type LoadingRegionProps } from "./LoadingRegion";
 export { PasswordInput, type PasswordInputProps } from "./PasswordInput";
 export { SearchInput, type SearchInputProps } from "./SearchInput";
 export { SegmentedControl, type SegmentedControlItem, type SegmentedControlProps } from "./SegmentedControl";

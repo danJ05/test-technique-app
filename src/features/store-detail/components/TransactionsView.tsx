@@ -1,12 +1,11 @@
 import { RefreshCw } from "lucide-react";
 
 import { Amount, DataTable, DateRangePicker, EmptyState, FilterBar, type DataTableColumn } from "@/shared/components";
-import { Button, DebouncedSearchInput, FilterChip, IconButton, Skeleton } from "@/shared/ui";
-import type { Transaction, TransactionType } from "@/services/stores";
-import type { DateRange } from "@/shared/utils/date";
-import { formatStoreDateTime } from "@/features/store-detail/utils";
-
-type TransactionTypeFilter = TransactionType | "all";
+import { getTransactionTypeLabel } from "@/shared/config/transaction-types";
+import { Button, DebouncedSearchInput, FilterChip, IconButton, LoadingRegion, Skeleton } from "@/shared/ui";
+import { formatDateTime, type DateRange } from "@/shared/utils/date";
+import type { Transaction } from "@/services/stores";
+import { TRANSACTION_TYPE_FILTER_OPTIONS, type TransactionTypeFilter } from "@/features/store-detail/lib/filters";
 
 interface TransactionsViewProps {
   transactions: Transaction[];
@@ -26,11 +25,11 @@ const COLUMNS: DataTableColumn<Transaction>[] = [
   {
     key: "type",
     header: "Type de transaction",
-    cell: ({ type }) => <span className="font-bold">{type === "shopping-payment" ? "Paiement course" : "Rendu monnaie"}</span>,
+    cell: ({ type }) => <span className="font-bold">{getTransactionTypeLabel(type)}</span>,
   },
   { key: "amount", header: "Montant", cell: ({ amount }) => <Amount value={amount} /> },
   { key: "client", header: "Client", cell: ({ client }) => client },
-  { key: "createdAt", header: "Date", cell: ({ createdAt }) => formatStoreDateTime(createdAt) },
+  { key: "createdAt", header: "Date", cell: ({ createdAt }) => formatDateTime(createdAt) },
 ];
 
 export const TransactionsView = ({
@@ -48,7 +47,9 @@ export const TransactionsView = ({
   const emptyState = error ? (
     <EmptyState title="Impossible de charger les transactions" />
   ) : isLoading ? (
-    <Skeleton className="mx-6 my-4 h-12" />
+    <LoadingRegion label="Chargement des transactions">
+      <Skeleton className="mx-6 my-4 h-12" />
+    </LoadingRegion>
   ) : (
     <EmptyState title="Aucune transaction trouvée" description="Modifiez vos filtres pour voir des résultats." />
   );
@@ -67,11 +68,7 @@ export const TransactionsView = ({
                 onValueChange={onSearchChange}
                 containerClassName="sm:max-w-[280px]"
               />
-              {([
-                { value: "all", label: "Tous" },
-                { value: "cash-return", label: "Rendu monnaie" },
-                { value: "shopping-payment", label: "Paiement courses" },
-              ] as const).map(({ value, label }) => (
+              {TRANSACTION_TYPE_FILTER_OPTIONS.map(({ value, label }) => (
                 <FilterChip key={value} label={label} isActive={type === value} onClick={() => onTypeChange(value)} />
               ))}
               <DateRangePicker aria-label="Période des transactions" value={dateRange} onChange={onDateRangeChange} />

@@ -1,12 +1,12 @@
 import type { FormEventHandler } from "react";
 import Link from "next/link";
 
-import { AuthCard } from "@/shared/components/AuthCard";
+import { AuthCard } from "./AuthCard";
 import { Button } from "@/shared/ui/Button";
 import { FormField, getFieldErrorId } from "@/shared/ui/FormField";
 import type { InputProps } from "@/shared/ui/Input";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
-import { authRoutes } from "@/features/auth/lib/auth-routes";
+import { routes } from "@/shared/config/routes";
 
 import { AuthNotice } from "./AuthNotice";
 
@@ -37,14 +37,14 @@ export const ResetPasswordFormView = ({
     {!resetToken ? (
       <div className="flex flex-1 flex-col gap-4">
         <AuthNotice>Cette demande est absente ou expirée. Recommencez la procédure.</AuthNotice>
-        <Link href={authRoutes.forgotPassword} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        <Link href={routes.forgotPassword} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
           Demander un nouveau code
         </Link>
       </div>
     ) : isSuccess ? (
       <div className="flex flex-1 flex-col gap-4">
         <AuthNotice tone="success">Mot de passe mis à jour (simulation). Aucune donnée n’a été conservée.</AuthNotice>
-        <Link href={authRoutes.login} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        <Link href={routes.login} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
           Retour à la connexion
         </Link>
       </div>

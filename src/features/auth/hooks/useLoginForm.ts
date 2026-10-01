@@ -9,5 +9,5 @@ export const useLoginForm = () =>
   useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { identifier: "", password: "" },
-    mode: "onChange",
+    mode: "onTouched",
   });

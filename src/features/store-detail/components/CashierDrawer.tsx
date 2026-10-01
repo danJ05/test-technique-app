@@ -1,5 +1,5 @@
 import { Amount, Drawer, DrawerSection, EmptyState, Timeline } from "@/shared/components";
-import { Button, Skeleton } from "@/shared/ui";
+import { Button, LoadingRegion, Skeleton } from "@/shared/ui";
 import type { CashierDetail } from "@/services/stores";
 
 interface CashierDrawerProps {
@@ -12,10 +12,10 @@ interface CashierDrawerProps {
 export const CashierDrawer = ({ cashierDetail, isLoading, error, closeHref }: CashierDrawerProps) => (
   <Drawer title={cashierDetail?.username ?? "Détails du caissier"} closeHref={closeHref}>
     {isLoading ? (
-      <div className="flex flex-col gap-5 p-6" aria-busy="true" aria-label="Chargement du caissier">
+      <LoadingRegion label="Chargement du caissier" className="flex flex-col gap-5 p-6">
         <Skeleton className="h-32" />
         <Skeleton className="h-40" />
-      </div>
+      </LoadingRegion>
     ) : error ? (
       <EmptyState title="Impossible de charger le caissier" description="Veuillez réessayer." />
     ) : cashierDetail ? (
@@ -26,7 +26,11 @@ export const CashierDrawer = ({ cashierDetail, isLoading, error, closeHref }: Ca
               id,
               title,
               description,
-              action: <Button variant="secondary" size="xs">Voir l&apos;activité</Button>,
+              action: (
+                <Button variant="secondary" size="xs" aria-label={`Voir l'activité à ${title}`}>
+                  Voir l&apos;activité
+                </Button>
+              ),
             }))}
           />
         </DrawerSection>
@@ -40,7 +44,9 @@ export const CashierDrawer = ({ cashierDetail, isLoading, error, closeHref }: Ca
             ))}
           </ul>
           <div className="mt-6 flex justify-center">
-            <Button variant="secondary" size="xs">Toutes les transactions</Button>
+            <Button variant="secondary" size="xs" aria-label={`Toutes les transactions de ${cashierDetail.username}`}>
+              Toutes les transactions
+            </Button>
           </div>
         </DrawerSection>
       </>
