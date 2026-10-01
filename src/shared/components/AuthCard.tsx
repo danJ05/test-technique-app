@@ -7,21 +7,30 @@ export interface AuthCardProps {
   description: string;
   children: ReactNode;
   className?: string;
+  compact?: boolean;
 }
 
-export const AuthCard = ({ title, description, children, className }: AuthCardProps) => (
+export const AuthCard = ({ title, description, children, className, compact = false }: AuthCardProps) => (
   <section
     aria-labelledby="auth-card-title"
     className={cn(
-      "relative flex min-h-[520px] w-full max-w-[443px] flex-col rounded-card bg-white px-6 py-8 shadow-auth sm:min-h-[640px] sm:px-10 sm:py-11",
+      "relative flex w-full flex-col rounded-card bg-white shadow-auth",
+      compact
+        ? "min-h-122.5 max-w-85 px-7.5 py-8"
+        : "min-h-130 max-w-110.75 px-6 py-8 sm:min-h-160 sm:px-10 sm:py-11",
       className,
     )}
   >
-    <header className="mb-8 sm:mb-10">
-      <h1 id="auth-card-title" className="text-[28px] font-black leading-tight text-ink sm:text-[36px]">
+    <header className={cn("mb-8", !compact && "sm:mb-10")}>
+      <h1
+        id="auth-card-title"
+        className={cn("font-black leading-tight text-ink", compact ? "text-[25px]" : "text-[28px] sm:text-[36px]")}
+      >
         {title}
       </h1>
-      <p className="mt-1 text-base font-medium leading-snug text-ink">{description}</p>
+      <p className={cn("mt-1 font-medium leading-snug text-ink", compact ? "text-sm" : "text-base")}>
+        {description}
+      </p>
     </header>
     <div className="flex flex-1 flex-col">{children}</div>
   </section>
