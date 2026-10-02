@@ -13,7 +13,6 @@ import { AuthNotice } from "./AuthNotice";
 interface LoginFormViewProps {
   identifier: Pick<InputProps, "name" | "onBlur" | "onChange" | "ref">;
   password: Pick<InputProps, "name" | "onBlur" | "onChange" | "ref">;
-  demoCredentials?: { identifier: string; password: string };
   errors: { identifier?: string; password?: string };
   isPending: boolean;
   isSubmitDisabled: boolean;
@@ -24,7 +23,6 @@ interface LoginFormViewProps {
 export const LoginFormView = ({
   identifier,
   password,
-  demoCredentials,
   errors,
   isPending,
   isSubmitDisabled,
@@ -60,11 +58,6 @@ export const LoginFormView = ({
           Mot de passe oublié
         </Link>
       </div>
-      {demoCredentials && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Démo : {demoCredentials.identifier} / {demoCredentials.password}
-        </p>
-      )}
       {errorMessage && <AuthNotice>{errorMessage}</AuthNotice>}
       <Button type="submit" size="auth" className="mt-auto h-11 max-w-65 self-center text-sm" disabled={isSubmitDisabled} isLoading={isPending}>
         Se connecter
