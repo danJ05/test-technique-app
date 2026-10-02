@@ -13,9 +13,19 @@ pnpm dev
 
 Ouvrir [http://localhost:3000](http://localhost:3000). La racine redirige vers `/login`.
 
+## Identifiants de test
+
+Ces identifiants ne sont plus affichés sur le formulaire de connexion. Utilisez-les pour tester l’application :
+
+| Champ | Valeur |
+| --- | --- |
+| Identifiant | `demo` |
+| Mot de passe | `Demo1234!` |
+| Code OTP (mot de passe oublié) | `1234` |
+
 ## Parcours de démonstration
 
-- Connexion : identifiant `demo`, mot de passe `Demo1234!`. Une connexion réussie affiche un toast, crée un cookie de démonstration valable huit heures, puis redirige vers `/dashboard` après trois secondes.
+- Connexion : saisir les identifiants de test ci-dessus. Une connexion réussie crée un cookie de démonstration valable huit heures, redirige vers `/dashboard` et affiche un toast de bienvenue.
 - Erreurs de connexion : `réseau` simule une erreur réseau et `serveur` une erreur serveur. Toute autre combinaison échoue.
 - Mot de passe oublié : saisir une adresse email valide, puis utiliser le code OTP `1234` pour continuer vers `/reset-password`.
 

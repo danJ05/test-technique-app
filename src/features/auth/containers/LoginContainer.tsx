@@ -8,7 +8,6 @@ import { getAuthErrorMessage } from "@/features/auth/lib/auth-errors";
 import { createDemoSession } from "@/features/auth/lib/auth-session";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { authDemoHints } from "@/services/auth";
 import { routes } from "@/shared/config/routes";
 
 export const LoginContainer = () => {
@@ -29,7 +28,6 @@ export const LoginContainer = () => {
     <LoginFormView
       identifier={form.register("identifier")}
       password={form.register("password")}
-      demoCredentials={authDemoHints ?? undefined}
       errors={{ identifier: form.formState.errors.identifier?.message, password: form.formState.errors.password?.message }}
       isPending={isBusy}
       isSubmitDisabled={isBusy}

@@ -8,7 +8,7 @@ export {
   type ButtonStyleOptions,
   type ButtonVariant,
 } from "./Button";
-export { Card, type CardElement, type CardProps, type CardTone } from "./Card";
+export { Card, type CardElement, type CardProps } from "./Card";
 export { DebouncedSearchInput, type DebouncedSearchInputProps } from "./DebouncedSearchInput";
 export { FilterChip, filterChipClassName, type FilterChipProps } from "./FilterChip";
 export { FormField, getFieldErrorId, type FormFieldProps } from "./FormField";
